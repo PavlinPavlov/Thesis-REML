@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>bg.p_pavlov.thesis.real_estate_ml</groupId>
-    <artifactId>reml-model-trainer</artifactId>
+    <artifactId>reml-stream-processor</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -25,6 +25,12 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.12</artifactId>
             <version>3.1.2</version>
         </dependency>
 

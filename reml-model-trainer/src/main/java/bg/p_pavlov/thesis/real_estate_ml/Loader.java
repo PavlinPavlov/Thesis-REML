@@ -4,6 +4,15 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.DATE;
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.ID;
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.LATITUDE;
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.LONGITUDE;
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.PRICE;
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.VIEW;
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.WATERFRONT;
+import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.YEAR_RENOVATED;
+
 public class Loader {
 
     public Dataset<Row> loadRealEstateData(String master, String filePath) {
@@ -19,7 +28,15 @@ public class Loader {
                 .load(filePath);
 
         return realEstateDF
-                .drop("id", "date", "waterfront", "view", "yr_renovated", "lat", "long")
-                .withColumnRenamed("price", "label");
+                .drop(
+                        ID,
+                        DATE,
+                        WATERFRONT,
+                        VIEW,
+                        YEAR_RENOVATED,
+                        LATITUDE,
+                        LONGITUDE
+                )
+                .withColumnRenamed(PRICE, "label");
     }
 }
