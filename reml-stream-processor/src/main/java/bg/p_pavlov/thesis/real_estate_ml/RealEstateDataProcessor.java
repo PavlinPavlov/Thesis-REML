@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 
 import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.from_json;
+import static org.apache.spark.sql.functions.to_json;
 
 public class RealEstateDataProcessor {
 
@@ -35,18 +36,19 @@ public class RealEstateDataProcessor {
 
         Dataset<Row> baseDataFrame = kafkaDataFrame
                 .select(
-                        from_json(col("value").cast(DataTypes.StringType), SchemaHolder.getSchema())
-                                .as("real_estate_event")
+                        from_json(
+                                col("value").cast(DataTypes.StringType), SchemaHolder.getSchema()
+                        ).as("tmp_real_estate_data")
                 );
 
+        baseDataFrame = baseDataFrame
+                .withColumn("value", to_json(col("tmp_real_estate_data")))
+                .select("value");
+
         StreamingQuery query = baseDataFrame.writeStream()
-                .outputMode("append")
-                .queryName("writing_to_es")
-                .format("org.elasticsearch.spark.sql")
-                .option("checkpointLocation", "/tmp")
-                .option("es.resource", "/es_spark")
-                .option("es.nodes", "es01:9200")
-                .option("es.index.auto.create", "true")
+                .format("kafka")
+                .option("kafka.bootstrap.servers", "kafka-broker-0:9092")
+                .option("topic", "real-estate-evaluated")
                 .start();
 
         query.awaitTermination();
