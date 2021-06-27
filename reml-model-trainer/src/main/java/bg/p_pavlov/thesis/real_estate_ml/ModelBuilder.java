@@ -1,5 +1,6 @@
 package bg.p_pavlov.thesis.real_estate_ml;
 
+import bg.p_pavlov.thesis.real_estate_ml.common.transformations.DataCategorizer;
 import ml.combust.mleap.spark.SimpleSparkSerializer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

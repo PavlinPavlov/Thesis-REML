@@ -1,6 +1,7 @@
 package bg.p_pavlov.thesis.real_estate_ml;
 
 import bg.p_pavlov.thesis.real_estate_ml.common.schema.SchemaHolder;
+import bg.p_pavlov.thesis.real_estate_ml.common.transformations.DataCategorizer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
@@ -26,12 +27,12 @@ public class RealEstateDataProcessor {
 
         SparkSession session = SparkSession.builder()
                 .appName("Spark Real Estate Processing App")
-                .master("spark://spark-master:7077")
+                .master("local[*]")
                 .getOrCreate();
 
         Dataset<Row> kafkaDataFrame = session.readStream()
                 .format("kafka")
-                .option("kafka.bootstrap.servers", "kafka-broker-0:19092")
+                .option("kafka.bootstrap.servers", "localhost:9092")
                 .option("subscribe", "real-estate-entries")
                 .load();
 
@@ -44,6 +45,11 @@ public class RealEstateDataProcessor {
                 )
                 .select("tmp_real_estate_data.*");
 
+
+        baseDataFrame = new DataCategorizer().encodeColumns(baseDataFrame);
+        baseDataFrame = new ModelLoader().load().transform(baseDataFrame);
+
+
         baseDataFrame = baseDataFrame
                 .select(struct(col("id"), col("price")).as("id_price_prediction"))
                 .select(to_json(col("id_price_prediction")).as("value"));
@@ -51,7 +57,8 @@ public class RealEstateDataProcessor {
 
         StreamingQuery query = baseDataFrame.writeStream()
                 .format("kafka")
-                .option("kafka.bootstrap.servers", "kafka-broker-0:9092")
+                .option("kafka.bootstrap.servers", "localhost:9092")
+                .option("checkpointLocation", "C:\\Users\\Pavlin\\Projects\\thesis\\reml-stream-processor\\checkpoints")
                 .option("topic", "real-estate-evaluated")
                 .start();
 
