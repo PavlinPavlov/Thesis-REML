@@ -13,7 +13,7 @@ import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataC
 import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.WATERFRONT;
 import static bg.p_pavlov.thesis.real_estate_ml.common.constants.RealEstateDataColumnConstants.YEAR_RENOVATED;
 
-public class Loader {
+public class DataLoader {
 
     public Dataset<Row> loadRealEstateData(String master, String filePath) {
         SparkSession session = SparkSession.builder()

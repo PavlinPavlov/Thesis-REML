@@ -36,8 +36,8 @@ public class LinearRegressionTrainer {
 
         LinearRegressionModel model = (LinearRegressionModel) trainValidationSplitModel.bestModel();
 
-        System.out.println("Hold out data: " + model.evaluate(holdout).r2());
-        System.out.println("Hold out data: " + model.evaluate(holdout).rootMeanSquaredError());
+        System.out.println("Hold out data R2: " + model.evaluate(holdout).r2());
+        System.out.println("Hold out data RMSE: " + model.evaluate(holdout).rootMeanSquaredError());
 
         return model;
     }
