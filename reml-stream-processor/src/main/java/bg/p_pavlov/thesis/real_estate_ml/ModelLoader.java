@@ -6,6 +6,6 @@ import org.apache.spark.ml.Transformer;
 public class ModelLoader {
 
     public Transformer load() {
-        return new SimpleSparkSerializer().deserializeFromBundle("jar:file:/model.zip");
+        return new SimpleSparkSerializer().deserializeFromBundle("jar:file:/real-estate-pipeline-model.zip");
     }
 }
